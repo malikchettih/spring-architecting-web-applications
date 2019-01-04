@@ -10,33 +10,45 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>app-migration</artifactId>
+
+    <properties>
+        <flyway.version>5.2.4</flyway.version>
+        <mysql.driver.version>8.0.13</mysql.driver.version>
+        <database.url>jdbc:mysql://localhost:33060/db-app</database.url>
+        <database.user>db-admin</database.user>
+        <database.password>password</database.password>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+            <version>${flyway.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql.driver.version}</version>
+        </dependency>
+
+    </dependencies>
+
     <build>
         <plugins>
-			<!-- maven compiler plugin -->
-			<plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                    <target>8</target>
-                </configuration>
-            </plugin>
 			<!-- maven flyway db migration plugin -->
 		    <plugin>
                 <groupId>org.flywaydb</groupId>
                 <artifactId>flyway-maven-plugin</artifactId>
-                <version>5.2.4</version>
+                <version>${flyway.version}</version>
                 <configuration>
-                    <url>jdbc:h2:file:./target/foobar</url>
-                    <user>sa</user>
+                    <sqlMigrationSeparator>__</sqlMigrationSeparator>
+                    <locations>
+                        <location>filesystem:src/main/resources/db/migrations</location>
+                    </locations>
+                    <url>${database.url}</url>
+                    <user>${database.url}</user>
+                    <password>${database.password}</password>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>com.h2database</groupId>
-                        <artifactId>h2</artifactId>
-                        <version>1.4.191</version>
-                    </dependency>
-                </dependencies>
             </plugin>
         </plugins>
     </build>
